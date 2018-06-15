@@ -10,11 +10,11 @@ use Mix.Config
 
 # You can configure your application as:
 #
-#     config :grapql_adapter, key: :value
+#     config :graphql_adapter, key: :value
 #
 # and access this configuration in your application as:
 #
-#     Application.get_env(:grapql_adapter, :key)
+#     Application.get_env(:graphql_adapter, :key)
 #
 # You can also configure a 3rd-party app:
 #
@@ -28,3 +28,11 @@ use Mix.Config
 # here (which is why it is important to import them last).
 #
 #     import_config "#{Mix.env}.exs"
+
+version = Mix.Project.config()[:version]
+
+config :graphql_adapter, GraphqlAdapter.Core,
+  headers: %{
+    "User-Agent" => "prima-microservice-dummy/#{version}",
+    "Content-type" => "application/json"
+  }

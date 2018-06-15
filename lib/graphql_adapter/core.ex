@@ -1,6 +1,6 @@
-defmodule GrapqlAdapter do
+defmodule GraphqlAdapter.Core do
   @moduledoc """
-  Documentation for GrapqlAdapter.
+  Documentation for GraphqlAdapter.
   """
 
   require Logger
@@ -10,12 +10,7 @@ defmodule GrapqlAdapter do
     recv_timeout: 16_000
   ]
 
-  @version Mix.Project.config()[:version]
-
-  @http_headers %{
-    "User-Agent" => "prima-microservice-ermes/#{@version}",
-    "Content-type" => "application/json"
-  }
+  @http_headers Application.get_env(:graphql_adapter, __MODULE__)[:headers]
 
   @doc """
   Invoca la query graphql.
@@ -56,11 +51,11 @@ defmodule GrapqlAdapter do
   end
 
   defp post(data, graphql_url),
-       do: HTTPoison.post(graphql_url, data, @http_headers, @http_options)
+    do: HTTPoison.post(graphql_url, data, @http_headers, @http_options)
 
   @spec encode_query(String.t(), map()) :: String.t()
   defp encode_query(query, variables),
-       do: Poison.encode!(%{query: String.trim(query), variables: Poison.encode!(variables)})
+    do: Poison.encode!(%{query: String.trim(query), variables: Poison.encode!(variables)})
 
   @spec handle_response(
           {:ok, HTTPoison.Response.t() | HTTPoison.AsyncResponse.t()}

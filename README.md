@@ -3,7 +3,7 @@
 Adapter for graphQL between PoisonHTTP and Absinthe 
 
 ## Motivation
-We noticed that the same glue code is used in many elixir project, this library is used to put together HttpPoison, Poison and pass the results to Absynthe
+We noticed that the same glue code is used in many elixir project, this library is used to put together HttpPoison, Poison and pass the results to Absynthe. This version also has a retry mechanism.
 
 ## Installation
 

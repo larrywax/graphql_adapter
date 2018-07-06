@@ -5,7 +5,7 @@ defmodule GraphqlAdapter.Core do
 
   require Logger
 
-  @http_options [
+  @http_options Application.get_env(:graphql_adapter, __MODULE__)[:http_options] || [
     timeout: 1_000,
     recv_timeout: 16_000
   ]

@@ -51,3 +51,20 @@ In the resolver file just import and use the main API entry point, `call`
 
 ```
 API returns 2 kind of values `%{:ok, map_or_list }` or `%{:error, cause}`
+
+
+##options
+
+* `config :graphql_adapter, GraphqlAdapter.Core, headers:` 
+```
+%{
+  "User-Agent" => "prima-microservice-borat/#{version}",
+  "Content-type" => "application/json"
+}
+```
+
+* `config :graphql_adapter, GraphqlAdapter.Core, http_options:` (optional) key list of 
+```
+[timeout: 1_000,
+ recv_timeout: 16_000]
+ ```

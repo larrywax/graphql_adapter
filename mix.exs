@@ -21,9 +21,8 @@ defmodule GraphqlAdapter.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:poison, "~> 3.1", override: true},
-      {:httpoison, "~> 1.1"}
-      # {:dep_from_git, git: "https://github.com/elixir-lang/my_dep.git", tag: "0.1.0"},
+      {:poison, "~> 4.0", override: true},
+      {:httpoison, "~> 1.4"}
     ]
   end
 end

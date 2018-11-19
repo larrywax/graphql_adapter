@@ -22,7 +22,7 @@ defmodule GraphqlAdapter.MixProject do
   defp deps do
     [
       {:poison, "~> 3.1", override: true},
-      {:httpoison, "~> 1.1"}
+      {:httpotion, "~> 3.1.0"}
       # {:dep_from_git, git: "https://github.com/elixir-lang/my_dep.git", tag: "0.1.0"},
     ]
   end

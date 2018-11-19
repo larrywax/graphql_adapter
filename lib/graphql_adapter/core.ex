@@ -18,6 +18,7 @@ defmodule GraphqlAdapter.Core do
   """
   @spec call(String.t(), String.t(), map()) :: {:ok, any()} | {:error, String.t()}
   def call(graphql_url, query, variables \\ %{}) do
+    Logger.warn("Connecting to #{graphql_url}")
     query
     |> encode_query(variables)
     |> retry(fn query ->
@@ -51,23 +52,23 @@ defmodule GraphqlAdapter.Core do
   end
 
   defp post(data, graphql_url),
-    do: HTTPoison.post(graphql_url, data, @http_headers, @http_options)
+    do: HTTPotion.post(graphql_url, [ body: data, headers: @http_headers])
 
   @spec encode_query(String.t(), map()) :: String.t()
   defp encode_query(query, variables),
     do: Poison.encode!(%{query: String.trim(query), variables: Poison.encode!(variables)})
 
   @spec handle_response(
-          {:ok, HTTPoison.Response.t() | HTTPoison.AsyncResponse.t()}
-          | {:error, HTTPoison.Error.t()}
+          {:ok, HTTPotion.Response.t() | HTTPotion.AsyncResponse.t()}
+          | {:error, HTTPotion.ErrorResponse.t()}
         ) :: {:ok, map()} | {:ok, list()} | {:ok, nil} | {:error, String.t()}
-  defp handle_response({:ok, %HTTPoison.Response{status_code: 200, body: body_string}}) do
+  defp handle_response({:ok, %HTTPotion.Response{status_code: 200, body: body_string}}) do
     body_string
     |> Poison.decode(keys: :atoms)
     |> response_has_errors()
   end
 
-  defp handle_response({:ok, %HTTPoison.Response{status_code: code, body: message}}) do
+  defp handle_response({:ok, %HTTPotion.Response{status_code: code, body: message}}) do
     Logger.warn(
       "response error #{code} #{message}",
       code: code,
@@ -77,20 +78,20 @@ defmodule GraphqlAdapter.Core do
     {:error, "bad response code #{code}: #{message}"}
   end
 
-  defp handle_response({:error, %HTTPoison.Error{reason: reason}}) do
-    Logger.warn("HTTP error #{reason}", reason: reason)
+  defp handle_response(%HTTPotion.ErrorResponse{message: reason}) do
+    Logger.warn("HTTP error #{reason}", message: reason)
     {:error, reason}
   end
 
   @spec response_has_errors({:ok, map()} | {:error, any()}) ::
           {:ok, nil} | {:ok, String.t()} | {:error, String.t()}
   defp response_has_errors({:error, reason}) do
-    Logger.warn("Failed to decode Graphql response", reason: inspect(reason))
+    Logger.warn("Failed to decode Graphql response", message: inspect(reason))
     {:error, inspect(reason)}
   end
 
   defp response_has_errors({:ok, %{errors: reason}}) do
-    Logger.warn("Failed to decode Graphql response", reason: inspect(reason))
+    Logger.warn("Failed to decode Graphql response", message: inspect(reason))
     {:error, inspect(reason)}
   end
 
